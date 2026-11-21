@@ -2,7 +2,7 @@
 
 Python entry for the OSU Builders Buildathon, November 20–22, 2026.
 
-Current code: `bloom-aim-v1`, a predictive aiming experiment using the original starter's movement. The strongest measured entry remains the 1.15 starter at commit `5009066`. The survival-v1 experiment scored 0.79 and is not selected. See RESULTS.md.
+Current code: `bloom-aim-v1`, predictive aiming using the original starter's movement. It scored 1.38 at commit `082352b`, up from the 1.15 starter, and is our selected best entry. The survival-v1 experiment scored 0.79. See RESULTS.md.
 
 ## Current experiment: aim where the enemy will be
 
@@ -34,7 +34,7 @@ Focused tests cover returning from outside the zone, relocating before a deadlin
 
 - Aiming-v1 checks: five focused maths tests pass. Direct Python and competition-style linux/amd64 Docker conformance pass for all 300 observations, with no missed deadlines. Docker maximum answer time was 7.1 ms on this Mac.
 
-Measured starter result: 1.15, receipt BB-5FF74C07. Next: submit the checked aiming experiment, then compare its score.
+Measured aiming result: 1.38, receipt BB-97061475, compared with starter 1.15. Next: build from this stronger version and evaluate another focused change.
 
 ## How the bot works
 

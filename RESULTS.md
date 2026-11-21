@@ -30,4 +30,7 @@ Next experiment: improve movement/survival or aiming with a clearly described ch
 - Restores the starter's movement and changes aiming to predict bullet interception and target body height.
 - Five focused maths tests passed; direct Python and sandboxed linux/amd64 Docker conformance passed all 300 observations with no missed deadlines.
 - Docker maximum response: 7.1 ms locally. Local timing does not guarantee scorer timing.
-- Practice score: pending submission. Compare against the measured 1.15 starter, not the weaker survival experiment.
+- Receipt: BB-97061475. Submitted commit: 082352b916cf75255617b3e6389c853e28c422fb.
+- Practice score: Scored, 1.38. Improvement over the measured 1.15 starter: +0.23 points (20%).
+- The site automatically selected this as our best entry. Snapshot rank: 86 of 93 teams, which changes as entries arrive.
+- This measures the combined aiming changes on the fixed practice seeds, not a guarantee of improvement against competitors or proof of any individual change's effect.
