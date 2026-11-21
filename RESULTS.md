@@ -13,3 +13,21 @@
 - The site selected it as the team's current final entry because it is our only scored submission. This does not mean the team has qualified for the final series.
 
 Next experiment: improve movement/survival or aiming with a clearly described change, validate conformance, then compare its measured score with 1.15.
+
+## Survival steering v1
+
+- Receipt: BB-B7D40A85
+- Commit: f74769ddd4efd3bb422cd8d29f247b4849d1cb44
+- Result: Scored, 0.79 placement points.
+- Compared with baseline: -0.36 points. This experiment did not improve the practice score.
+- Local focused tests and sandbox conformance passed; that did not translate into better gameplay.
+- The site's selected entry remains the 1.15 starter. Do not manually select this weaker experiment as the final.
+- The observed result does not explain individual deaths. Possible issues such as retreating into obstacles, resting without sensing enemies or inadequate route planning are hypotheses, not confirmed causes.
+- Next: preserve this experiment in Git, build the next experiment from the scored baseline, and evaluate aiming separately before adding broad steering changes again.
+
+## Predictive gun aiming v1
+
+- Restores the starter's movement and changes aiming to predict bullet interception and target body height.
+- Five focused maths tests passed; direct Python and sandboxed linux/amd64 Docker conformance passed all 300 observations with no missed deadlines.
+- Docker maximum response: 7.1 ms locally. Local timing does not guarantee scorer timing.
+- Practice score: pending submission. Compare against the measured 1.15 starter, not the weaker survival experiment.

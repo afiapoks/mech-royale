@@ -2,9 +2,19 @@
 
 Python entry for the OSU Builders Buildathon, November 20–22, 2026.
 
-Current version: `bloom-survival-v1`, our first movement experiment. The unchanged official example at commit `5009066` scored 1.15. The new version is not yet measured in matches.
+Current code: `bloom-aim-v1`, a predictive aiming experiment using the original starter's movement. The strongest measured entry remains the 1.15 starter at commit `5009066`. The survival-v1 experiment scored 0.79 and is not selected. See RESULTS.md.
 
-## First experiment: survival steering
+## Current experiment: aim where the enemy will be
+
+The gun fires a straight-moving bullet, which needs time to reach its target. `aiming.py` uses the target's reported velocity and the gun's live speed to estimate where they will meet. For a stationary target 100 metres away and a 250 m/s bullet, the travel time is 0.4 seconds. A sideways-moving target will have moved before the bullet arrives, so our aiming point moves ahead too.
+
+The code solves for the earliest non-negative impact time. If there is no intercept or the predicted travel exceeds gun range, it falls back to aiming directly. It also aims at the enemy's body center using the configured body height and cube scaling, rather than assuming all robots are the same size. The prediction assumes constant enemy velocity; changes of direction and obstacles can still cause misses.
+
+Movement, nearest-enemy selection, trigger holding, loot collection and upgrade decisions are the starter's original behavior. Other weapons share the same torso aim, so this is not yet specialized mortar or laser aiming. The earlier `navigation.py` is retained as experiment code but is not imported or packaged into the active bot.
+
+Run focused aiming tests with `python3 -m unittest -v test_aiming`. They verify stationary, sideways and approaching targets, an impossible intercept, and aiming height. Conformance tests verify communication and timing, not whether the bot wins.
+
+## Previous experiment: survival steering (scored 0.79)
 
 `navigation.py` considers a small set of possible movement directions and gives each a cost. Directions outside the playable circle get a large penalty. Directions nearer predicted enemy positions get a smaller penalty. The bot also estimates whether it needs to start moving into the next circle before it closes.
 
@@ -22,17 +32,19 @@ Focused tests cover returning from outside the zone, relocating before a deadlin
 - The base image is pinned by digest for reproducible builds. Only runtime Python files are copied into the image.
 - Survival-v1 checks: five focused tests pass; direct Python and competition-style Intel Docker conformance pass for all 300 observations. Docker maximum response was 8.8 ms on this Mac, below the 50 ms budget. Local timings do not predict scorer timings.
 
-Measured starter result: 1.15, receipt BB-5FF74C07. Next: check and submit the movement experiment, then compare its score.
+- Aiming-v1 checks: five focused maths tests pass. Direct Python and competition-style linux/amd64 Docker conformance pass for all 300 observations, with no missed deadlines. Docker maximum answer time was 7.1 ms on this Mac.
+
+Measured starter result: 1.15, receipt BB-5FF74C07. Next: submit the checked aiming experiment, then compare its score.
 
 ## How the bot works
 
 The server sends observations, and `example_bot.py` returns an action. `mechfight.py` handles reading and writing messages so the strategy can focus on decisions.
 
 - `self` describes our robot, including its position, health, energy and weapons.
-- `zone.next_center` is the center of the next playable circle. The baseline walks directly toward it; our navigator balances relocation with nearby threats.
+- `zone.next_center` is the center of the next playable circle. The active aiming experiment uses the baseline's direct movement toward it.
 - `math.atan2` converts the difference between two positions into a direction angle. Cosine and sine turn that angle into east/north movement.
 - `near` finds weapon pickups within horizontal collection distance. The starter tries to collect one when its second slot is empty. This logic still needs improvement: collection also has a height limit.
-- `enemies` sorts visible enemy mechs by distance. The starter aims at the nearest one and holds both triggers. Different weapons need different firing logic, so this is another future improvement.
+- `enemies` sorts visible enemy mechs by distance. The active bot predicts an aiming point for the nearest one and holds both triggers. Different weapons need different firing logic, so this is another future improvement.
 - `tick` echoes the observation number. Without it, the server cannot match our decision to the observation.
 - `mf.draw` adds debugging information. These drawings do not improve performance or appear in the public replay.
 

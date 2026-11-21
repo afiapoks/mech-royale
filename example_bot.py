@@ -1,15 +1,15 @@
-"""Bloom survival experiment: safer steering, with the starter's shooting unchanged."""
+"""Bloom gun-leading experiment: original starter movement, predictive aiming."""
 import math
 import mechfight as mf
-from navigation import Navigator
+from aiming import gun_aim
 
 
 class Bot:
-    name = "bloom-survival-v1"
+    name = "bloom-aim-v1"
 
     def __init__(self, hello: mf.Hello):
         self.reach = hello["config"]["loot"]["pickup_radius"]
-        self.navigator = Navigator(hello["config"])
+        self.config = hello["config"]
 
     def act(self, obs: mf.Observation) -> mf.Action:
         me = obs["self"]
@@ -23,11 +23,10 @@ class Bot:
             act["take"] = near[0]["id"]
         enemies = sorted((m for m in obs["mechs"] if m["kind"] == "mech"), key=lambda m: math.dist(m["pos"], me["pos"]))
         yaw = math.atan2(goal[1] - y, goal[0] - x)
-        act.update(self.navigator.decide(obs))
-        act["aim"] = [yaw, 0.0]
+        act.update(move=[math.cos(yaw), math.sin(yaw)], aim=[yaw, 0.0], boost=not me["in_zone"], jump=obs["tick"] % 40 == 0)
         if enemies:
             t = enemies[0]["pos"]
-            aim = [math.atan2(t[1] - y, t[0] - x), math.atan2(t[2] - z - 2.5, math.dist(t[:2], (x, y)))]
+            aim = gun_aim(me, enemies[0], self.config)
             act.update(aim=aim, fire=[True, True])
             mf.draw.line([x, y, z + 7], [t[0], t[1], t[2] + 4.5], "#ff5040")
         mf.draw.point([goal[0], goal[1], z], "#40c0ff", 6)
