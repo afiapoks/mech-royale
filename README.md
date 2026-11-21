@@ -8,10 +8,10 @@ Current version: the unmodified official example bot. We are establishing a work
 
 - Direct Python conformance check: PASS, all 300 observations answered on time, no bad lines or wrong ticks.
 - Docker builds: succeeded for linux/amd64 (competition architecture) and linux/arm64 (local architecture).
-- Docker conformance checks: not passed locally. Both container startups exceeded the 20-second ready limit. Even a minimal Intel Python command stalled before producing output; the diagnostic containers remained in Created state. This suggests a Docker startup issue, but its cause is not yet established. This is not evidence that the competition image will pass on the scorer.
+- Docker conformance check: PASS on the required linux/amd64 image, with no network, one CPU, 512 MB, read-only disk and the unprivileged user. All 300 observations answered on time; ready in 1,006 ms, maximum answer time 5.2 ms. Initial startup attempts stalled, but a later unchanged-image retry passed after Docker began starting containers normally. The original startup cause is not established.
 - The base image is pinned by digest for reproducible builds. Only the two runtime Python files are copied into the image.
 
-Next: resolve container startup, then measure the unchanged starter's practice score before claiming any strategy improvement.
+Next: publish the repository and measure the unchanged starter's practice score before claiming any strategy improvement.
 
 ## How the bot works
 
