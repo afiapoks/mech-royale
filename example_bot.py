@@ -1,13 +1,15 @@
-"""Example bot: walk to the zone, grab a weapon, shoot the nearest mech, draw what it's thinking."""
+"""Bloom survival experiment: safer steering, with the starter's shooting unchanged."""
 import math
 import mechfight as mf
+from navigation import Navigator
 
 
 class Bot:
-    name = "example-py"
+    name = "bloom-survival-v1"
 
     def __init__(self, hello: mf.Hello):
         self.reach = hello["config"]["loot"]["pickup_radius"]
+        self.navigator = Navigator(hello["config"])
 
     def act(self, obs: mf.Observation) -> mf.Action:
         me = obs["self"]
@@ -21,7 +23,8 @@ class Bot:
             act["take"] = near[0]["id"]
         enemies = sorted((m for m in obs["mechs"] if m["kind"] == "mech"), key=lambda m: math.dist(m["pos"], me["pos"]))
         yaw = math.atan2(goal[1] - y, goal[0] - x)
-        act.update(move=[math.cos(yaw), math.sin(yaw)], aim=[yaw, 0.0], boost=not me["in_zone"], jump=obs["tick"] % 40 == 0)
+        act.update(self.navigator.decide(obs))
+        act["aim"] = [yaw, 0.0]
         if enemies:
             t = enemies[0]["pos"]
             aim = [math.atan2(t[1] - y, t[0] - x), math.atan2(t[2] - z - 2.5, math.dist(t[:2], (x, y)))]
@@ -32,4 +35,5 @@ class Bot:
         return act
 
 
-mf.run(Bot)
+if __name__ == "__main__":
+    mf.run(Bot)
