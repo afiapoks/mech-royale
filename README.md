@@ -2,7 +2,15 @@
 
 Python entry for the OSU Builders Buildathon, November 20–22, 2026.
 
-Current code: `bloom-aim-v1`, predictive aiming using the original starter's movement. It scored 1.38 at commit `082352b`, up from the 1.15 starter, and is our selected best entry. The survival-v1 experiment scored 0.79. See RESULTS.md.
+Current code: `bloom-route-v1`, predictive aiming plus walking routes around buildings. Its score is pending. The selected best entry remains the 1.38 aiming version at commit `082352b`. See RESULTS.md.
+
+## November 22 routing experiment
+
+`routing.py` turns solid building footprints into an 8-metre walking grid, with a 5-metre wall margin. A* searches for a route toward the next zone center, penalizing steps outside the current circle and preventing diagonal corner squeezing. If the destination is blocked, it chooses nearby open ground. It limits search time and can return a partial route; the bot replans as it moves. The map is read from the scorer-provided directory, not bundled.
+
+This models ground walking, not roof routes, steep terrain or low bridges. The active bot retains the aiming version's firing, boost, jump, loot and upgrade behavior. Tests cover routing around a wall, choosing an open destination and handling a fully blocked map.
+
+Live rules observed November 22: scorer builders-4, 96 practice matches with fresh random seeds per submission. The form allows six submissions per hour, though the rule paragraph still says four. Old and new scores are not controlled comparisons. Cutoff remains 10 AM Central.
 
 ## Current experiment: aim where the enemy will be
 

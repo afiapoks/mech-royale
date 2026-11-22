@@ -1,15 +1,17 @@
-"""Bloom gun-leading experiment: original starter movement, predictive aiming."""
+"""Bloom route experiment: building-aware walking and predictive gun aiming."""
 import math
 import mechfight as mf
 from aiming import gun_aim
+from routing import Router
 
 
 class Bot:
-    name = "bloom-aim-v1"
+    name = "bloom-route-v1"
 
     def __init__(self, hello: mf.Hello):
         self.reach = hello["config"]["loot"]["pickup_radius"]
         self.config = hello["config"]
+        self.router = Router.load(hello["map"]["dir"])
 
     def act(self, obs: mf.Observation) -> mf.Action:
         me = obs["self"]
@@ -22,7 +24,8 @@ class Bot:
         if me["weapons"][1] is None and near and near[0]["kind"] != "gun":
             act["take"] = near[0]["id"]
         enemies = sorted((m for m in obs["mechs"] if m["kind"] == "mech"), key=lambda m: math.dist(m["pos"], me["pos"]))
-        yaw = math.atan2(goal[1] - y, goal[0] - x)
+        waypoint = self.router.waypoint(me["pos"], goal, obs["zone"], obs["tick"]) if self.router else goal
+        yaw = math.atan2(waypoint[1] - y, waypoint[0] - x)
         act.update(move=[math.cos(yaw), math.sin(yaw)], aim=[yaw, 0.0], boost=not me["in_zone"], jump=obs["tick"] % 40 == 0)
         if enemies:
             t = enemies[0]["pos"]

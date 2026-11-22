@@ -34,3 +34,9 @@ Next experiment: improve movement/survival or aiming with a clearly described ch
 - Practice score: Scored, 1.38. Improvement over the measured 1.15 starter: +0.23 points (20%).
 - The site automatically selected this as our best entry. Snapshot rank: 86 of 93 teams, which changes as entries arrive.
 - This measures the combined aiming changes on the fixed practice seeds, not a guarantee of improvement against competitors or proof of any individual change's effect.
+
+## Building routing v1, November 22
+
+- Adds a bounded A* walking grid around building footprints, retaining aiming-v1 combat behavior.
+- Three route tests and five aiming tests passed. Direct Python conformance passed all 300 observations.
+- Score and receipt pending submission. Live rules now show builders-4, 96 matches and fresh seeds, so comparison with Friday is not controlled.
